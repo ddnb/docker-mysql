@@ -1,38 +1,12 @@
-FROM centos:7
+FROM mysql:5.7.17
 
 LABEL MAINTAINER="admin@diendannhatban.info"
 
-RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-RUN yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+# MySQL plugin mecab 
+# https://hub.docker.com/r/flrngel/mysql-mecab-ko/~/dockerfile/
+RUN apt-get update && apt-get install -yq mecab libmecab-dev unzip curl g++ make && \
+    curl -sSL -o /tmp/mecab-ko.tar.gz https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.0.1-20150920.tar.gz && \
+    cd /tmp/ && tar xvzf mecab-ko.tar.gz && cd mecab-ko-dic-2.0.1-20150920 && \
+    ./configure && make && make install
 
-# Dependencies
-RUN yum update -y
-RUN yum install -y httpd yum-utils
-
-# RUN yum-config-manager --enable remi-php70
-# RUN yum-config-manager --enable remi-php71
-RUN yum-config-manager --enable remi-php72
-
-RUN yum install --enablerepo=epel -y \
-  php \
-  php-mcrypt \
-  php-cli \
-  php-gd \
-  php-curl \
-  php-mysql \
-  php-ldap \
-  php-zip \
-  php-fileinfo 
-
-RUN sed -i -e "s|^;date.timezone =.*$|date.timezone = Asia/Tokyo|" /etc/php.ini
-
-# Default Docker Dev
-COPY site.conf /etc/httpd/conf.d/site.conf
-# TODO: allow exclude cp !()
-RUN shopt -s extglob
-
-ENV HOME /root
-
-EXPOSE 8000
-
-CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+RUN echo "dicdir=/usr/lib/mecab/dic/mecab-ko-dic" > /etc/mecabrc

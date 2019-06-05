@@ -1,24 +1,19 @@
-version: '3.3'
+version: '3.7'
 
 services:
-  
-  images:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    working_dir: /code
-    volumes:
-      - ".:/code"
-    entrypoint: ["sh", "-c", "sleep infinity"]
 
   mysql:
     image: mysql:5.7.17
+    container_name: mysql-ddnb
+    hostname: mysql.ddnb
     restart: always
     expose:
       - "3306"
     ports:
       - "3306:3306"
     volumes:
-      - ./:/code
+      - ./docker/mysql/mysql_init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/data:/var/lib/mysql
     env_file:
       - .env

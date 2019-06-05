@@ -1,3 +1,4 @@
 .env
-sql/projects/*
-sql/backup/*
+docker/mysql/data
+sql/projects
+sql/backup
