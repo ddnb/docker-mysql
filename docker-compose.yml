@@ -2,9 +2,9 @@ version: '3.7'
 
 services:
 
-  mysql:
+  ddnb-mysql:
     image: mysql:5.7.17
-    container_name: mysql-ddnb
+    container_name: ddnb-mysql
     hostname: mysql.ddnb
     restart: always
     expose:
@@ -12,8 +12,10 @@ services:
     ports:
       - "3306:3306"
     volumes:
+      - ./:/repo
       - ./docker/mysql/mysql_init:/docker-entrypoint-initdb.d
       - ./docker/mysql/conf.d:/etc/mysql/conf.d
       - ./docker/mysql/data:/var/lib/mysql
+    working_dir: /repo
     env_file:
       - .env
