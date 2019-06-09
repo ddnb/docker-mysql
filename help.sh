@@ -144,8 +144,8 @@ run_mysql() {
     restore)
       # TODO restore to exactyly db name
       # ./help.sh db restore jira backup/jira_init.sql
-      echo "[dbname] sql/[path_to_filename]"
-      readonly RESTORE_DB="mysql -uroot -p ${3} < ${PATH_REPO}/sql/${4}"
+      echo "syntax: ./help.sh db restore [dbname] [path_to_filename]"
+      readonly RESTORE_DB="mysql -uroot -p ${3} < ${PATH_REPO}/${4}"
 			echo $RESTORE_DB
       docker-compose exec ${DOCKER_IMAGE_NAME} sh -c "$RESTORE_DB"
     ;;
